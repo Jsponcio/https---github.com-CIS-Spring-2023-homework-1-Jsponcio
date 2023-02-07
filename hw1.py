@@ -17,22 +17,24 @@ def create_con(hostname, uname, pwd, dbname):
     return connection
 
 def addCases():
-    print('\nYou chose to add cases')
     country = input('Please enter the country name: ')
     year = int(input('Please enter the year: '))
     total = int(input('Please enter the total cases: '))
     deaths = int(input('Please enter the death count: '))
     recover = int(input('Please enter the number of people who recovered: '))
-    sql = (f"INSERT INTO covidcases (countryname, year, totalcases, deaths, recovered) VALUES ({country}, {year}, {total}, {deaths}, {recover})")
-    cursor.execute(sql)
+    userInput = {
+        'country': country,
+        'year': year,
+        'total': total,
+        'deaths': deaths,
+        'recover': recover
+    }
+    sql = ("INSERT INTO covidcases (countryname, year, totalcases, deaths, recovered) VALUES (%(country)s, %(year)s, %(total)s, %(deaths)s, %(recover)s)")
+    cursor.execute(sql, userInput)
 
     con.commit()
-    
-    
-
 
 def outputCases():
-    print('\nYou chose to print all cases')
     sql = 'select * from covidcases'
     cursor.execute(sql)
     rows = cursor.fetchall()
@@ -51,6 +53,7 @@ while True:
     print('o - Ouput all cases')  
     print('q - Quit')  
     userchoice = input('\nEnter your choice:')
+    userchoice = userchoice.lower()
 
     if userchoice == 'a':
         addCases()
@@ -59,7 +62,7 @@ while True:
         outputCases()
 
     elif userchoice == 'q':
-        print('\nYou chose to quit, goodbye')
+        print('\nGoodbye')
         break
     
     else: print('\nIncorrect/Invalid choice. Please choose again')
